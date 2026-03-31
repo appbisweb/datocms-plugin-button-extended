@@ -46,13 +46,13 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
     "isValid": true,
     "type": "url",
     "text": "Made by App Bis Web",
-    "ariaLabel": "Based one Better Linking",
+    "ariaLabel": "Based on Better Linking",
     "url": "app-bis-web.de",
     "target": "_blank",
     "rel": "nofollow",
     "noFollow": true,
     "class": "cta",
-    "icon": "grift"
+    "icon": "gift"
   }
 }
 ```
@@ -90,7 +90,7 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
   },
   "iconType": {
     "label": "Gift",
-    "value": "grift"
+    "value": "gift"
   },
   "record": {},
   "asset": {},
@@ -104,13 +104,13 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
     "isValid": true,
     "type": "url",
     "text": "Made by App Bis Web",
-    "ariaLabel": "Based one Better Linking",
+    "ariaLabel": "Based on Better Linking",
     "url": "app-bis-web.de",
     "target": "_blank",
     "rel": "nofollow",
     "noFollow": true,
     "class": "cta",
-    "icon": "grift"
+    "icon": "gift"
   },
   "custom_text": "Made by App Bis Web",
   "aria_label": "Based one Better Linking",

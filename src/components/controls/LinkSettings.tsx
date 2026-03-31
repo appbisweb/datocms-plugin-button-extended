@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
 	Form,
 	FieldGroup,
@@ -6,10 +6,8 @@ import {
 	SwitchField,
 	Button,
 } from "datocms-react-ui";
-import Helpers from "./../../utils/helpers";
-import styles from "./../../styles/styles.LinkSettings.module.css";
-
-const { getCtxParams, getDefaultValue } = Helpers();
+import { getCtxParams, getDefaultValue } from "../../utils/helpers";
+import styles from "../../styles/styles.LinkSettings.module.css";
 
 type PropTypes = {
 	ctx: any;
@@ -23,12 +21,13 @@ type ConfigSetting = {
 };
 
 type LinkType = {
+	id?: string;
 	label: string;
 	api_key?: string;
 	value: string;
 };
 
-const LinkSetting: React.FC<PropTypes> = ({ ctx, configType }) => {
+const LinkSetting = ({ ctx, configType }: PropTypes) => {
 	const ctxParameters: any = getCtxParams(ctx, configType);
 
 	const savedLinkFieldSettings: ConfigSetting[] = [
@@ -108,7 +107,7 @@ const LinkSetting: React.FC<PropTypes> = ({ ctx, configType }) => {
 	const itemTypes: LinkType[] = Object.values(ctx?.itemTypes)
 		.filter((type: any) => !type.attributes.modular_block)
 		.map((value: any) => ({
-			...value,
+			id: value.id,
 			label: value.attributes.name,
 			api_key: value.attributes.api_key,
 			value: value.id,

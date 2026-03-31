@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { Canvas, Section, Button } from "datocms-react-ui";
 import { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
-import Helpers from "./../utils/helpers";
+import { getCtxParams } from "../utils/helpers";
 
-import LinkSettings from "./../components/controlls/LinkSettings";
-import StylingSettings from "../components/controlls/StylingSettings";
-import IconSettings from "../components/controlls/IconSettings";
+import LinkSettings from "../components/controls/LinkSettings";
+import StylingSettings from "../components/controls/StylingSettings";
+import IconSettings from "../components/controls/IconSettings";
 
 type PropTypes = {
 	ctx: RenderManualFieldExtensionConfigScreenCtx;
 };
-const { getCtxParams } = Helpers();
 
 export default function FieldConfigScreen({ ctx }: PropTypes) {
 	const [linkSettingIsOpen, setLinkSettingIsOpen] = useState(false);

@@ -1,6 +1,4 @@
-import Helpers from "./helpers";
-
-const { getCtxParams, getDefaultValue } = Helpers();
+import { getCtxParams, getDefaultValue } from "./helpers";
 
 describe("getDefaultValue", () => {
 	it("returns the value if key exists", () => {

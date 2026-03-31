@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FieldGroup, Button, SelectField } from "datocms-react-ui";
 import { Trash2 } from "lucide-react";
 import styles from "./../../styles/styles.FieldRecordAsset.module.css";
@@ -40,14 +40,14 @@ const defaultLinkType: LinkType = {
 	api_key: "",
 };
 
-const FieldRecord: React.FC<Props> = ({
+const FieldRecord = ({
 	ctx,
 	ctxFieldParameters,
 	ctxPluginParameters,
 	savedFieldSettings,
 	locale,
 	onValueUpdate,
-}) => {
+}: Props) => {
 	const [fieldSettings, setFieldSettings] =
 		useState<FieldSettings>(savedFieldSettings);
 

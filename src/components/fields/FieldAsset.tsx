@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FieldGroup, Button } from "datocms-react-ui";
 import { Trash2 } from "lucide-react";
 import styles from "./../../styles/styles.FieldRecordAsset.module.css";
@@ -28,16 +28,14 @@ type Props = {
 	onValueUpdate: (value: any) => void;
 };
 
-const FieldAsset: React.FC<Props> = ({
+const FieldAsset = ({
 	ctx,
 	savedFieldSettings,
 	locale,
 	onValueUpdate,
-}) => {
+}: Props) => {
 	const [fieldSettings, setFieldSettings] =
 		useState<FieldSettings>(savedFieldSettings);
-
-	// Manipulate Assets
 	const updateAssetValue = async (asset: any) => {
 		const getLocalizedData = (
 			source: { [key: string]: any } | string,

@@ -1,13 +1,19 @@
-import { Button, TextField, FieldGroup } from "datocms-react-ui";
+import { Button, TextField, FieldGroup, SwitchField } from "datocms-react-ui";
 import { Trash2 } from "lucide-react";
 import styles from "./../../../styles/styles.StylingSettings.module.css";
 
-type ItemType = { id: number; label: string; value: string };
+type ItemType = {
+	id: number;
+	label: string;
+	value: string;
+	allowIcons: boolean;
+};
 type Props = {
 	item: ItemType;
 	onIdChange: (value: number) => void;
 	onLabelChange: (value: string) => void;
 	onValueChange: (value: string) => void;
+	onAllowIconsChange: (value: boolean) => void;
 	onDelete: (value: number) => void;
 	duplicateArrays: {
 		duplicateIds: number[];
@@ -17,21 +23,22 @@ type Props = {
 	isRequired: boolean;
 };
 
-export default function IconItem({
+export default function StylingItem({
 	item,
 	onIdChange,
 	onLabelChange,
 	onValueChange,
+	onAllowIconsChange,
 	onDelete,
 	duplicateArrays,
 	isRequired,
 }: Props) {
 	const { duplicateIds, duplicateLabels, duplicateValues } = duplicateArrays;
-	const exsistingId = duplicateIds.includes(item.id);
-	const exsistingLabel = duplicateLabels.includes(item.label);
-	const exsistingValue = duplicateValues.includes(item.value);
+	const existingId = duplicateIds.includes(item.id);
+	const existingLabel = duplicateLabels.includes(item.label);
+	const existingValue = duplicateValues.includes(item.value);
 
-	if (exsistingId) {
+	if (existingId) {
 		const newId = item.id * 1000000;
 		onIdChange(newId);
 	}
@@ -42,7 +49,7 @@ export default function IconItem({
 				<TextField
 					required={isRequired}
 					error={
-						(isRequired && item.label === "") || exsistingLabel
+						(isRequired && item.label === "") || existingLabel
 							? "Label already exists"
 							: ""
 					}
@@ -61,7 +68,7 @@ export default function IconItem({
 				<TextField
 					required={isRequired}
 					error={
-						(isRequired && item.value === "") || exsistingValue
+						(isRequired && item.value === "") || existingValue
 							? "Value is required"
 							: ""
 					}
@@ -78,6 +85,14 @@ export default function IconItem({
 					}}
 				/>
 			</FieldGroup>
+
+			<SwitchField
+				id={`${item.id}-allowIcons`}
+				name={`${item.id}-allowIcons`}
+				label="Icons"
+				value={item.allowIcons}
+				onChange={onAllowIconsChange}
+			/>
 
 			<Button
 				buttonSize="xs"

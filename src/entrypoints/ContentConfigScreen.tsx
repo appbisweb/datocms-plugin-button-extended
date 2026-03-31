@@ -6,17 +6,15 @@ import {
 	SwitchField,
 	TextField,
 } from "datocms-react-ui";
-import Helpers from "./../utils/helpers";
+import { getCtxParams, getDefaultValue } from "../utils/helpers";
 
-import FieldAsset from "./../components/fields/FieldAsset";
-import FieldRecord from "./../components/fields/FieldRecord";
-import FieldTel from "./../components/fields/FieldTel";
-import FieldEmail from "./../components/fields/FieldEmail";
-import FieldUrl from "./../components/fields/FieldUrl";
+import FieldAsset from "../components/fields/FieldAsset";
+import FieldRecord from "../components/fields/FieldRecord";
+import FieldTel from "../components/fields/FieldTel";
+import FieldEmail from "../components/fields/FieldEmail";
+import FieldUrl from "../components/fields/FieldUrl";
 
-import styles from "./../styles/styles.ContentConfigScreen.module.css";
-
-const { getCtxParams, getDefaultValue } = Helpers();
+import styles from "../styles/styles.ContentConfigScreen.module.css";
 
 type PropTypes = {
 	ctx: any;
@@ -43,7 +41,6 @@ type RecordData = {
 				id: string;
 				api_key: string;
 				label: string;
-				type: string;
 		  }
 		| undefined;
 };
@@ -106,7 +103,7 @@ const initialStoredData: StoredData = {
 	plugin_version: "",
 };
 
-export default function ContentConigScreen({ ctx }: PropTypes) {
+export default function ContentConfigScreen({ ctx }: PropTypes) {
 	const storedDataRef = useRef<StoredData>({ ...initialStoredData });
 	const locale: string = ctx?.locale;
 	const ctxFieldParameters: any = getCtxParams(ctx, "field_settings");
@@ -177,30 +174,9 @@ export default function ContentConigScreen({ ctx }: PropTypes) {
 		}
 
 		const recordModel = getRecordModel(sourceRecord);
-
-		let apiKey = undefined;
-		if (recordModel && recordModel.api_key) {
-			apiKey = String(recordModel.api_key);
-		} else if (
-			recordModel &&
-			recordModel.attributes &&
-			recordModel.attributes.api_key
-		) {
-			apiKey = String(recordModel.attributes.api_key);
-		} else {
-			const directMatch = sourceRecord.cms_url.match(
-				/item_types\/([A-Za-z0-9_-]+)/,
-			);
-			if (directMatch && directMatch[1]) {
-				const directItemTypeId = directMatch[1];
-				const directMatchingItemType = itemTypes.find(
-					(it: any) => it.id === directItemTypeId,
-				);
-				if (directMatchingItemType && directMatchingItemType.api_key) {
-					apiKey = String(directMatchingItemType.api_key);
-				}
-			}
-		}
+		const apiKey = recordModel?.api_key
+			? String(recordModel.api_key)
+			: undefined;
 
 		return {
 			...sourceRecord,
@@ -208,10 +184,9 @@ export default function ContentConigScreen({ ctx }: PropTypes) {
 			modelData:
 				apiKey && recordModel
 					? {
-							id: recordModel?.id,
+							id: recordModel.id,
 							api_key: apiKey,
-							label: recordModel?.label,
-							type: recordModel?.type,
+							label: recordModel.label,
 						}
 					: undefined,
 		};

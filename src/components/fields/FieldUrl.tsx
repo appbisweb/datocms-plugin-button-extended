@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TextField } from "datocms-react-ui";
 
 type FieldSettings = {
@@ -17,15 +17,13 @@ type Props = {
 	onValueUpdate: (value: any) => void;
 };
 
-const FieldUrl: React.FC<Props> = ({
+const FieldUrl = ({
 	ctx: _ctx,
 	savedFieldSettings,
 	onValueUpdate,
-}) => {
+}: Props) => {
 	const [fieldSettings, setFieldSettings] =
 		useState<FieldSettings>(savedFieldSettings);
-
-	// Manipulate Assets
 	const updateValue = (newObject: any) => {
 		let url = newObject.url.replace(
 			/[^a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]/g,
