@@ -76,7 +76,7 @@
 	"license": "GPL-3.0",
 	"datoCmsPlugin": {
 		"title": "Button Extended",
-		"previewImage": "docs/button-extended-setup.mp4",
+		"previewImage": "docs/demo.mp4",
 		"coverImage": "docs/cover.png",
 		"entryPoint": "dist/index.html",
 		"permissions": [
