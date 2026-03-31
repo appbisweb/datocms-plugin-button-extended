@@ -17,7 +17,6 @@ export default function PluginConfigScreen({ ctx }: Props) {
 	return (
 		<Canvas ctx={ctx}>
 			<div className="content">
-				<p>Welcome to the "Button Extended" plugin!</p>
 				<p>
 					This DatoCMS plugin allows you to easily create a complex
 					link field, containing:
@@ -28,7 +27,10 @@ export default function PluginConfigScreen({ ctx }: Props) {
 						links, or telephone numbers)
 					</li>
 					<li>Custom styling variants</li>
-					<li>Icon selection per variant</li>
+					<li>
+						Icon selection per variant (or just having a second
+						setting dimension for the buttons)
+					</li>
 					<li>Custom title overrides</li>
 					<li>Aria-label text overrides</li>
 					<li>Target window and NoFollow controls</li>
@@ -102,13 +104,6 @@ export default function PluginConfigScreen({ ctx }: Props) {
 					data object will be returned, containing all the data and
 					selected options, allowing developers full access to the
 					detailed information of the link.
-				</p>
-				<p>
-					This might look a bit intimidating at first glance, but
-					don't be scared. In the JSON data object, you will also find
-					an object called "formatted". This object contains a
-					minimized representation of all link data. In most cases,
-					this data will be more than enough to handle your links.
 				</p>
 			</div>
 

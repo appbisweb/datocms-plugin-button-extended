@@ -17,11 +17,7 @@ type Props = {
 	onValueUpdate: (value: any) => void;
 };
 
-const FieldUrl = ({
-	ctx: _ctx,
-	savedFieldSettings,
-	onValueUpdate,
-}: Props) => {
+const FieldUrl = ({ ctx: _ctx, savedFieldSettings, onValueUpdate }: Props) => {
 	const [fieldSettings, setFieldSettings] =
 		useState<FieldSettings>(savedFieldSettings);
 	const updateValue = (newObject: any) => {

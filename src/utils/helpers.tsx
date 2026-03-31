@@ -24,9 +24,8 @@ export function getCtxParams(ctx: any, configType: string) {
 	if (
 		configType !== "plugin_settings" &&
 		ctx?.field?.attributes?.appearance?.parameters?.field_settings &&
-		Object.keys(
-			ctx.field?.attributes.appearance.parameters.field_settings,
-		).length > 0
+		Object.keys(ctx.field?.attributes.appearance.parameters.field_settings)
+			.length > 0
 	) {
 		return ctx.field.attributes.appearance.parameters.field_settings;
 	}
@@ -41,6 +40,10 @@ export function getCtxParams(ctx: any, configType: string) {
 	return {};
 }
 
-export function getDefaultValue(ctxParameters: any, key: string, fallback: any) {
+export function getDefaultValue(
+	ctxParameters: any,
+	key: string,
+	fallback: any,
+) {
 	return ctxParameters?.[key] !== undefined ? ctxParameters[key] : fallback;
 }
