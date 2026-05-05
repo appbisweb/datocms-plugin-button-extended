@@ -378,7 +378,14 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 												ctxPluginParameters
 											}
 											savedFieldSettings={
-												contentSettings.record
+												contentSettings.record ?? {
+													id: undefined,
+													title: undefined,
+													slug: undefined,
+													url: undefined,
+													cms_url: undefined,
+													status: undefined,
+												}
 											}
 											onValueUpdate={(value: any) =>
 												updateContentSettings({
@@ -392,7 +399,14 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 										<FieldAsset
 											ctx={ctx}
 											savedFieldSettings={
-												contentSettings.asset
+												contentSettings.asset ?? {
+													id: undefined,
+													title: undefined,
+													alt: undefined,
+													url: undefined,
+													cms_url: undefined,
+													status: undefined,
+												}
 											}
 											onValueUpdate={(value: any) =>
 												updateContentSettings({
@@ -406,7 +420,10 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 										<FieldUrl
 											ctx={ctx}
 											savedFieldSettings={
-												contentSettings.url
+												contentSettings.url ?? {
+													title: undefined,
+													url: undefined,
+												}
 											}
 											onValueUpdate={(value: any) =>
 												updateContentSettings({
@@ -419,7 +436,10 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 										<FieldTel
 											ctx={ctx}
 											savedFieldSettings={
-												contentSettings.tel
+												contentSettings.tel ?? {
+													title: undefined,
+													url: undefined,
+												}
 											}
 											onValueUpdate={(value: any) =>
 												updateContentSettings({
@@ -432,7 +452,10 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 										<FieldEmail
 											ctx={ctx}
 											savedFieldSettings={
-												contentSettings.email
+												contentSettings.email ?? {
+													title: undefined,
+													url: undefined,
+												}
 											}
 											onValueUpdate={(value: any) =>
 												updateContentSettings({
