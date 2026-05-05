@@ -2,7 +2,7 @@
 	"private": false,
 	"name": "datocms-plugin-button-extended",
 	"homepage": "https://github.com/appbisweb/datocms-plugin-button-extended",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "DatoCMS plugin for advanced link and button management — supporting records, assets, URLs, telephone and email links with styling variants, icons, titles, aria-labels, nofollow and target control.",
 	"engines": {
 		"node": ">=20.0.0"

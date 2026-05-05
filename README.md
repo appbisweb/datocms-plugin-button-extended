@@ -57,6 +57,17 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
 }
 ```
 
+### Unconfigured buttons
+
+Button fields are optional. When no link type is selected, the field stores `null` instead of a JSON object. This keeps the record payload minimal — especially important for multilingual records with multiple button fields that can quickly approach the [DatoCMS 300 KB record size limit](https://www.datocms.com/docs/content-management-api/technical-limits).
+
+Make sure your frontend code handles this gracefully:
+
+```typescript
+const button = JSON.parse(rawButtonField);
+if (!button?.formatted?.isValid) return null;
+```
+
 ### Formatted fields
 
 | Field | Type | Description |
@@ -65,12 +76,12 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
 | `type` | `string` | Link type: `record`, `asset`, `url`, `tel`, or `email` |
 | `text` | `string` | Display text (custom title or fallback from link data) |
 | `ariaLabel` | `string` | Accessibility label |
-| `url` | `string \| null` | The resolved URL |
+| `url` | `string` | The resolved URL. Omitted when not set |
 | `target` | `string` | `_blank` or `_self` |
-| `rel` | `string \| null` | `"nofollow"` when enabled, otherwise `null` |
+| `rel` | `string` | `"nofollow"` when enabled. Omitted otherwise |
 | `noFollow` | `boolean` | Whether nofollow is active |
-| `class` | `string \| null` | CSS class from the selected styling variant |
-| `icon` | `string \| null` | Icon identifier from the selected icon option |
+| `class` | `string` | CSS class from the selected styling variant. Omitted when not set |
+| `icon` | `string` | Icon identifier from the selected icon option. Omitted when not set |
 
 ### Full response example
 
@@ -92,14 +103,10 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
     "label": "Gift",
     "value": "gift"
   },
-  "record": {},
-  "asset": {},
   "url": {
     "title": "URL",
     "url": "app-bis-web.de"
   },
-  "tel": {},
-  "email": {},
   "formatted": {
     "isValid": true,
     "type": "url",
@@ -113,7 +120,7 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
     "icon": "gift"
   },
   "custom_text": "Made by App Bis Web",
-  "aria_label": "Based one Better Linking",
+  "aria_label": "Based on Better Linking",
   "open_in_new_window": true,
   "nofollow": true,
   "isValid": true
@@ -121,6 +128,16 @@ When querying a Button Extended field via GraphQL, the full JSON object is retur
 ```
 
 </details>
+
+---
+
+## Upgrading to v1.1.0
+
+Version 1.1.0 optimizes the stored JSON payload. This is fully backward compatible:
+
+- **Existing configured buttons** are unchanged and continue to work as before.
+- **Unconfigured buttons** will be migrated to `null` the next time an editor saves the record, freeing up space.
+- **Frontend code** that already uses null-safe access (e.g. `button?.formatted?.url`) requires no changes. If your code checks for `=== null` on fields like `rel`, `class` or `icon`, update it to use a falsy check (`!button.formatted.rel`) since these properties are now omitted rather than set to `null`.
 
 ---
 

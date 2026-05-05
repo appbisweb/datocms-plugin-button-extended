@@ -95,4 +95,34 @@ describe("getCtxParams", () => {
 		const result = getCtxParams(ctx, "content_settings");
 		expect(result).toEqual({ custom: true });
 	});
+
+	it("returns {} for content_settings when formFieldValues is null", () => {
+		const ctx = {
+			fieldPath: "data",
+			formValues: { data: null },
+			plugin: { attributes: { parameters: {} } },
+		};
+		const result = getCtxParams(ctx, "content_settings");
+		expect(result).toEqual({});
+	});
+
+	it('returns {} for content_settings when stored value is "false"', () => {
+		const ctx = {
+			fieldPath: "data",
+			formValues: { data: "false" },
+			plugin: { attributes: { parameters: {} } },
+		};
+		const result = getCtxParams(ctx, "content_settings");
+		expect(result).toEqual({});
+	});
+
+	it('returns {} for content_settings when stored value is "null"', () => {
+		const ctx = {
+			fieldPath: "data",
+			formValues: { data: "null" },
+			plugin: { attributes: { parameters: {} } },
+		};
+		const result = getCtxParams(ctx, "content_settings");
+		expect(result).toEqual({});
+	});
 });

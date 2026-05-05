@@ -7,7 +7,8 @@ export function getCtxParams(ctx: any, configType: string) {
 
 	if (configType === "content_settings" && formFieldValues) {
 		try {
-			return JSON.parse(formFieldValues);
+			const parsed = JSON.parse(formFieldValues);
+			return parsed && typeof parsed === "object" ? parsed : {};
 		} catch {
 			return {};
 		}

@@ -69,38 +69,28 @@ type MailData = {
 
 type StoredData = {
 	linkType: LinkTypeData;
-	stylingType: StylingTypeData;
-	iconType: IconTypeData;
-	record: RecordData;
-	asset: AssetData;
-	url: UrlData;
-	tel: TelData;
-	email: MailData;
-	custom_text: string | number | readonly string[] | undefined;
-	aria_label: string | number | readonly string[] | undefined;
+	stylingType?: StylingTypeData;
+	iconType?: IconTypeData;
+	record?: RecordData | null;
+	asset?: AssetData;
+	url?: UrlData;
+	tel?: TelData;
+	email?: MailData;
+	custom_text?: string | number | readonly string[] | undefined;
+	aria_label?: string | number | readonly string[] | undefined;
 	open_in_new_window: boolean;
 	nofollow: boolean;
 	formatted: any;
 	isValid: boolean;
-	plugin_version: string;
+	plugin_version?: string;
 };
 
 const initialStoredData: StoredData = {
-	linkType: {} as LinkTypeData,
-	stylingType: {} as StylingTypeData,
-	iconType: {} as IconTypeData,
-	record: {} as RecordData,
-	asset: {} as AssetData,
-	url: {} as UrlData,
-	tel: {} as TelData,
-	email: {} as MailData,
+	linkType: { label: "--select--", value: "" },
 	formatted: {},
-	custom_text: undefined,
-	aria_label: undefined,
 	open_in_new_window: false,
 	nofollow: false,
 	isValid: false,
-	plugin_version: "",
 };
 
 export default function ContentConfigScreen({ ctx }: PropTypes) {
@@ -119,7 +109,11 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 		linkTypeOptions = linkTypeOptions.filter((e) => e.value !== "record");
 	}
 
-	const defaultLinkType = { label: "--select--", value: "" } as LinkTypeData;
+	const defaultLinkType: LinkTypeData = { label: "--select--", value: "" };
+	const allLinkTypeOptions: LinkTypeData[] = [
+		defaultLinkType,
+		...linkTypeOptions,
+	];
 	const stylingOptions = ctxFieldParameters?.stylingOptions ?? [];
 	const iconOptions = ctxFieldParameters?.iconOptions ?? [];
 	const allowNewTarget = ctxFieldParameters?.allow_new_target ?? true;
@@ -127,28 +121,6 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 	const allowAriaLabel = ctxFieldParameters?.allow_aria_label ?? true;
 	const allowIcons = ctxFieldParameters?.allow_icons ?? true;
 	const allowNoFollow = ctxFieldParameters?.allow_nofollow ?? true;
-	const defaultRecord = {
-		cms_url: undefined,
-		id: undefined,
-		slug: undefined,
-		status: undefined,
-		title: undefined,
-		url: undefined,
-		modelApiKey: undefined,
-		modelData: undefined,
-	};
-	const defaultAsset = {
-		alt: undefined,
-		cms_url: undefined,
-		id: undefined,
-		status: undefined,
-		title: undefined,
-		url: undefined,
-	};
-	const defaultUrl = { title: undefined, url: undefined };
-	const defaultTel = { title: undefined, url: undefined };
-	const defaultEmail = { title: undefined, url: undefined };
-
 	const hasStyling = stylingOptions && stylingOptions.length > 0;
 	const hasIcons = iconOptions.length > 0 && allowIcons;
 
@@ -224,11 +196,7 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 	};
 
 	const savedContentSettings: StoredData = {
-		linkType: getDefaultValue(
-			ctxParameters,
-			"linkType",
-			linkTypeOptions?.[0] || defaultLinkType,
-		),
+		linkType: getDefaultValue(ctxParameters, "linkType", defaultLinkType),
 		stylingType: hasStyling
 			? getDefaultValue(
 					ctxParameters,
@@ -244,12 +212,12 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 				)
 			: undefined,
 		record: getRecordModelDetails(
-			getDefaultValue(ctxParameters, "record", defaultRecord),
+			getDefaultValue(ctxParameters, "record", undefined),
 		),
-		asset: getDefaultValue(ctxParameters, "asset", defaultAsset),
-		url: getDefaultValue(ctxParameters, "url", defaultUrl),
-		tel: getDefaultValue(ctxParameters, "tel", defaultTel),
-		email: getDefaultValue(ctxParameters, "email", defaultEmail),
+		asset: getDefaultValue(ctxParameters, "asset", undefined),
+		url: getDefaultValue(ctxParameters, "url", undefined),
+		tel: getDefaultValue(ctxParameters, "tel", undefined),
+		email: getDefaultValue(ctxParameters, "email", undefined),
 		formatted: getDefaultValue(ctxParameters, "formatted", {}),
 		custom_text: allowCustomText
 			? getDefaultValue(ctxParameters, "custom_text", undefined)
@@ -284,7 +252,7 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 			...valueObject,
 		};
 
-		if (data?.record && Object.keys(data.record).length > 0) {
+		if (data.record && Object.keys(data.record).length > 0) {
 			const record = getRecordModelDetails(data.record);
 			if (record) {
 				data.record = { ...record };
@@ -295,11 +263,11 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 
 		data = {
 			...data,
-			record: selectedType === "record" ? data.record : defaultRecord,
-			asset: selectedType === "asset" ? data.asset : defaultAsset,
-			url: selectedType === "url" ? data.url : defaultUrl,
-			tel: selectedType === "tel" ? data.tel : defaultTel,
-			email: selectedType === "email" ? data.email : defaultEmail,
+			record: selectedType === "record" ? data.record : undefined,
+			asset: selectedType === "asset" ? data.asset : undefined,
+			url: selectedType === "url" ? data.url : undefined,
+			tel: selectedType === "tel" ? data.tel : undefined,
+			email: selectedType === "email" ? data.email : undefined,
 		};
 
 		if (selectedType === "record" && data?.record?.id) {
@@ -320,21 +288,29 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 
 		const formatted = {
 			isValid: false,
-			type: selectedType,
+			type: selectedType || undefined,
 			modelApiKey:
 				selectedType === "record"
 					? data?.record?.modelApiKey
 					: undefined,
 			text: getText(data, selectedType),
 			ariaLabel: data.aria_label ?? getText(data, selectedType),
-			url: selectedType !== "" ? data?.[selectedType]?.url || null : null,
+			url:
+				selectedType !== ""
+					? data?.[selectedType]?.url || undefined
+					: undefined,
 			target: data?.open_in_new_window ? "_blank" : "_self",
-			rel: data?.open_in_new_window && data?.nofollow ? "nofollow" : null,
+			rel:
+				data?.open_in_new_window && data?.nofollow
+					? "nofollow"
+					: undefined,
 			noFollow: data?.open_in_new_window
 				? data?.nofollow || false
 				: false,
-			class: data?.stylingType?.value || null,
-			icon: currentShowIcon ? data?.iconType?.value || null : null,
+			class: data?.stylingType?.value || undefined,
+			icon: currentShowIcon
+				? data?.iconType?.value || undefined
+				: undefined,
 		};
 
 		formatted.isValid = formatted.text && formatted.url ? true : false;
@@ -348,12 +324,28 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 		storedDataRef.current = newSettings;
 		setContentSettings(newSettings);
 
-		ctx.setFieldValue(ctx.fieldPath, JSON.stringify(newSettings));
+		ctx.setFieldValue(
+			ctx.fieldPath,
+			selectedType === "" ? null : JSON.stringify(newSettings),
+		);
 	};
+
+	const hasLinkTypeOptions = linkTypeOptions.length > 0;
+	const isActive = !!contentSettings.linkType?.value;
 
 	return (
 		<Canvas ctx={ctx}>
-			{contentSettings.linkType?.value ? (
+			{!hasLinkTypeOptions ? (
+				<div>
+					<p className={styles["link-field__error"]}>
+						<strong>Error!</strong> No valid link types could be
+						found for this field.
+						<br />
+						Please add the wanted link types to the field appearance
+						settings or the plugin settings.
+					</p>
+				</div>
+			) : (
 				<Form>
 					<div className={styles["link-field"]}>
 						<div className={styles["link-field__row-type"]}>
@@ -364,8 +356,7 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 									label="Type"
 									value={contentSettings.linkType}
 									selectInputProps={{
-										options:
-											linkTypeOptions as LinkTypeData[],
+										options: allLinkTypeOptions,
 									}}
 									onChange={(newValue) => {
 										updateContentSettings({
@@ -374,78 +365,87 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 									}}
 								/>
 							</div>
-							<div>
-								{contentSettings.linkType.value === "record" ? (
-									<FieldRecord
-										ctx={ctx}
-										ctxFieldParameters={ctxFieldParameters}
-										ctxPluginParameters={
-											ctxPluginParameters
-										}
-										savedFieldSettings={
-											contentSettings.record
-										}
-										onValueUpdate={(value: any) =>
-											updateContentSettings({
-												record: value,
-											})
-										}
-										locale={locale}
-									/>
-								) : contentSettings?.linkType?.value ===
-								  "asset" ? (
-									<FieldAsset
-										ctx={ctx}
-										savedFieldSettings={
-											contentSettings.asset
-										}
-										onValueUpdate={(value: any) =>
-											updateContentSettings({
-												asset: value,
-											})
-										}
-										locale={locale}
-									/>
-								) : contentSettings?.linkType?.value ===
-								  "url" ? (
-									<FieldUrl
-										ctx={ctx}
-										savedFieldSettings={contentSettings.url}
-										onValueUpdate={(value: any) =>
-											updateContentSettings({
-												url: value,
-											})
-										}
-									/>
-								) : contentSettings?.linkType?.value ===
-								  "tel" ? (
-									<FieldTel
-										ctx={ctx}
-										savedFieldSettings={contentSettings.tel}
-										onValueUpdate={(value: any) =>
-											updateContentSettings({
-												tel: value,
-											})
-										}
-									/>
-								) : contentSettings?.linkType?.value ===
-								  "email" ? (
-									<FieldEmail
-										ctx={ctx}
-										savedFieldSettings={
-											contentSettings.email
-										}
-										onValueUpdate={(value: any) =>
-											updateContentSettings({
-												email: value,
-											})
-										}
-									/>
-								) : null}
-							</div>
+							{isActive && (
+								<div>
+									{contentSettings.linkType.value ===
+									"record" ? (
+										<FieldRecord
+											ctx={ctx}
+											ctxFieldParameters={
+												ctxFieldParameters
+											}
+											ctxPluginParameters={
+												ctxPluginParameters
+											}
+											savedFieldSettings={
+												contentSettings.record
+											}
+											onValueUpdate={(value: any) =>
+												updateContentSettings({
+													record: value,
+												})
+											}
+											locale={locale}
+										/>
+									) : contentSettings.linkType.value ===
+									  "asset" ? (
+										<FieldAsset
+											ctx={ctx}
+											savedFieldSettings={
+												contentSettings.asset
+											}
+											onValueUpdate={(value: any) =>
+												updateContentSettings({
+													asset: value,
+												})
+											}
+											locale={locale}
+										/>
+									) : contentSettings.linkType.value ===
+									  "url" ? (
+										<FieldUrl
+											ctx={ctx}
+											savedFieldSettings={
+												contentSettings.url
+											}
+											onValueUpdate={(value: any) =>
+												updateContentSettings({
+													url: value,
+												})
+											}
+										/>
+									) : contentSettings.linkType.value ===
+									  "tel" ? (
+										<FieldTel
+											ctx={ctx}
+											savedFieldSettings={
+												contentSettings.tel
+											}
+											onValueUpdate={(value: any) =>
+												updateContentSettings({
+													tel: value,
+												})
+											}
+										/>
+									) : contentSettings.linkType.value ===
+									  "email" ? (
+										<FieldEmail
+											ctx={ctx}
+											savedFieldSettings={
+												contentSettings.email
+											}
+											onValueUpdate={(value: any) =>
+												updateContentSettings({
+													email: value,
+												})
+											}
+										/>
+									) : null}
+								</div>
+							)}
 						</div>
 
-						{(allowCustomText || allowAriaLabel) && (
+						{isActive && (allowCustomText || allowAriaLabel) && (
 							<div className={styles["link-field__row-title"]}>
 								{allowCustomText && (
 									<div>
@@ -486,7 +486,7 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 							</div>
 						)}
 
-						{(hasStyling || showIconSelect) && (
+						{isActive && (hasStyling || showIconSelect) && (
 							<div className={styles["link-field__row-variant"]}>
 								{hasStyling && (
 									<div>
@@ -529,7 +529,7 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 							</div>
 						)}
 
-						{allowNewTarget && (
+						{isActive && allowNewTarget && (
 							<div className={styles["link-field__row-bottom"]}>
 								<SwitchField
 									name="open_in_new_window"
@@ -560,16 +560,6 @@ export default function ContentConfigScreen({ ctx }: PropTypes) {
 						)}
 					</div>
 				</Form>
-			) : (
-				<div>
-					<p className={styles["link-field__error"]}>
-						<strong>Error!</strong> No valid link types could be
-						found for this field.
-						<br />
-						Please add the wanted link types to the field appearance
-						settings or the plugin settings
-					</p>
-				</div>
 			)}
 		</Canvas>
 	);
